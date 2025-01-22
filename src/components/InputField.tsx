@@ -1,18 +1,23 @@
-import { useState, ChangeEvent } from "react";
-import { createListObj } from "../utils/helpers";
+import { useState, ChangeEvent, useContext } from "react";
+// import { createListObj } from "../utils/helpers";
+import { ListContext } from "../context/listContext";
 
 export default function InputField() {
   const [countValue, setCountValue] = useState<number>(1);
   const [inputValue, setInputValue] = useState<string>("Items...");
 
+  const listContext = useContext(ListContext);
+  if (!listContext) return;
+  const { addItem } = listContext;
+
   function onSelectHandler(e: ChangeEvent<HTMLSelectElement>) {
     setCountValue(Number(e.target.value));
   }
 
-  function addItemHandler() {
-    const data = createListObj(inputValue, countValue);
-    console.log(data);
-  }
+  //   function addItemHandler() {
+  //     const data = createListObj(inputValue, countValue);
+  //     console.log(data);
+  //   }
 
   return (
     <div className="bg-secondary sm:flex-row flex flex-col justify-center gap-x-4 items-center py-4">
@@ -47,7 +52,7 @@ export default function InputField() {
         <button
           type="button"
           disabled={!inputValue}
-          onClick={addItemHandler}
+          onClick={() => addItem(inputValue, countValue)}
           className="bg-tertiary py-1 px-4 rounded-2xl uppercase font-medium text-dark disabled:bg-tertiary/70"
         >
           Add
