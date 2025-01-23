@@ -1,12 +1,21 @@
-import { useState, createContext, ReactNode } from "react";
+import {
+  useState,
+  createContext,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { ListType, ListsType } from "../types/listType";
 import { createListObj } from "../utils/helpers";
 
 interface ListContextType {
   items: ListsType;
-  addItem: (item: string, qty: number) => void;
+  countValue: number;
+  setCountValue: Dispatch<SetStateAction<number>>;
+  addItem: (item: string) => void;
   deleteItem: (id: string) => void;
   toggleCheckbox: (id: string) => void;
+  updateItem: (id: string, item: string) => void;
 }
 
 export const ListContext = createContext<ListContextType | undefined>(
@@ -19,9 +28,10 @@ interface ListProviderType {
 
 export default function ListProvider({ children }: ListProviderType) {
   const [items, setItems] = useState<ListsType>([]);
+  const [countValue, setCountValue] = useState<number>(1);
 
-  function addItem(item: string, qty: number) {
-    const newItem = createListObj(item, qty);
+  function addItem(item: string) {
+    const newItem = createListObj(item, countValue);
     setItems([...items, newItem]);
   }
 
@@ -34,14 +44,31 @@ export default function ListProvider({ children }: ListProviderType) {
     const copyItems = [...items];
     const selectedItem = copyItems.find((item) => item.id === id);
     if (selectedItem) {
-      selectedItem.completed = !selectedItem;
+      selectedItem.completed = !selectedItem.completed;
+      setItems([...copyItems]);
+    }
+  }
+
+  function updateItem(id: string, item: string) {
+    const copyItems = [...items];
+    const selectedItem = copyItems.find((item) => item.id === id);
+    if (selectedItem) {
+      selectedItem.item = item;
       setItems([...copyItems]);
     }
   }
 
   return (
     <ListContext.Provider
-      value={{ items, addItem, deleteItem, toggleCheckbox }}
+      value={{
+        items,
+        countValue,
+        addItem,
+        deleteItem,
+        toggleCheckbox,
+        setCountValue,
+        updateItem,
+      }}
     >
       {children}
     </ListContext.Provider>

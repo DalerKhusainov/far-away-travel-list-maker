@@ -1,23 +1,13 @@
-import { useState, ChangeEvent, useContext } from "react";
-// import { createListObj } from "../utils/helpers";
+import { useState, useContext } from "react";
 import { ListContext } from "../context/listContext";
+import Selector from "./Selector";
 
 export default function InputField() {
-  const [countValue, setCountValue] = useState<number>(1);
   const [inputValue, setInputValue] = useState<string>("Items...");
 
   const listContext = useContext(ListContext);
   if (!listContext) return;
-  const { addItem } = listContext;
-
-  function onSelectHandler(e: ChangeEvent<HTMLSelectElement>) {
-    setCountValue(Number(e.target.value));
-  }
-
-  //   function addItemHandler() {
-  //     const data = createListObj(inputValue, countValue);
-  //     console.log(data);
-  //   }
+  const { addItem, countValue, setCountValue } = listContext;
 
   return (
     <div className="bg-secondary sm:flex-row flex flex-col justify-center gap-x-4 items-center py-4">
@@ -25,24 +15,11 @@ export default function InputField() {
         What do you need for your trip?
       </h3>
       <div className="flex gap-2">
-        <select
-          name=""
-          id=""
-          value={countValue}
-          onChange={onSelectHandler}
-          className="bg-inputColor rounded-2xl px-4"
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-        </select>
+        <Selector
+          countValue={countValue}
+          setCountValue={setCountValue}
+          size={"lg"}
+        />
         <input
           type="text"
           placeholder="Items..."
@@ -52,7 +29,7 @@ export default function InputField() {
         <button
           type="button"
           disabled={!inputValue}
-          onClick={() => addItem(inputValue, countValue)}
+          onClick={() => addItem(inputValue)}
           className="bg-tertiary py-1 px-4 rounded-2xl uppercase font-medium text-dark disabled:bg-tertiary/70"
         >
           Add
