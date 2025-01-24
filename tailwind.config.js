@@ -11,6 +11,7 @@ export default {
       accent: "#4d3524",
       inputColor: "#fde7aa",
     },
+    fontFamily: { monoton: "Monoton, sans serif" },
     extend: {},
   },
   plugins: [],

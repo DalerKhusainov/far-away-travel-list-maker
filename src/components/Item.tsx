@@ -9,15 +9,14 @@ interface ItemProps {
 
 export default function Item({ item }: ItemProps) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
-  console.log(isOpen);
 
   const listContext = useContext(ListContext);
   if (!listContext) return;
-  const { deleteItem, toggleCheckbox } = listContext;
+  const { deleteItem, toggleCheckbox, updateItem } = listContext;
 
   return (
     <>
-      {!isOpen && (
+      {isOpen && (
         <ItemCard
           itemObj={item}
           toggleCheckbox={toggleCheckbox}
@@ -25,7 +24,13 @@ export default function Item({ item }: ItemProps) {
           setIsOpen={setIsOpen}
         />
       )}
-      {isOpen && <ItemUpdate itemObj={item} setIsOpen={setIsOpen} />}
+      {!isOpen && (
+        <ItemUpdate
+          itemObj={item}
+          setIsOpen={setIsOpen}
+          updateItem={updateItem}
+        />
+      )}
     </>
   );
 }
@@ -33,30 +38,37 @@ export default function Item({ item }: ItemProps) {
 interface ItemUpdateProps {
   itemObj: ListType;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  updateItem: (id: string, item: string, qty: number) => void;
   // setCountValue: Dispatch<SetStateAction<number>>;
 }
 
-function ItemUpdate({ itemObj, setIsOpen }: ItemUpdateProps) {
-  const { qty, item } = itemObj;
+function ItemUpdate({ itemObj, setIsOpen, updateItem }: ItemUpdateProps) {
+  const { id, qty, item } = itemObj;
   const [updatedItem, setUpdatedItem] = useState<string>(item);
   const [updatedCountValue, setUpdatedCountValue] = useState<number>(qty);
+
+  function onSaveHandler() {
+    updateItem(id, updatedItem, updatedCountValue);
+    setIsOpen((prev) => !prev);
+  }
 
   return (
     <div className="flex justify-between items-center gap-2 mb-4 bg-primary/30 py-2 px-4 rounded-md shadow-lg h-[50px]">
       <div className="flex items-center justify-center text-lg space-x-4">
         <Selector
-          countValue={qty}
+          countValue={updatedCountValue}
           setCountValue={setUpdatedCountValue}
           size={"md"}
         />
         <input
           type="text"
           defaultValue={updatedItem}
+          onChange={(e) => setUpdatedItem(e.target.value)}
           className="bg-primary/20 text-light w-full"
         />
       </div>
       <div className="flex justify-center items-center">
-        <button type="button" onClick={() => setIsOpen((prev) => !prev)}>
+        <button type="button" onClick={onSaveHandler}>
           <Save size={18} />
         </button>
       </div>
@@ -87,9 +99,10 @@ function ItemCard({
           defaultChecked={completed}
           onClick={() => toggleCheckbox(id)}
         />
-        <div className="text-lg space-x-2">
-          <span>{qty}</span>
-          <span>{item}</span>
+        <div className={`text-lg space-x-2 ${completed ? "line-through" : ""}`}>
+          <span>
+            {qty} {item}
+          </span>
         </div>
       </div>
       <div className="flex justify-center items-center gap-3">
