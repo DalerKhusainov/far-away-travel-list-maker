@@ -2,7 +2,7 @@ import { useState, useContext, FormEvent } from "react";
 import { ListContext } from "../context/listContext";
 import Selector from "./Selector";
 
-export default function InputField() {
+export default function Form() {
   const [inputValue, setInputValue] = useState<string>("");
 
   const listContext = useContext(ListContext);
@@ -18,6 +18,8 @@ export default function InputField() {
     }
   }
 
+  const countOption = Array.from({ length: 20 }, (_, i) => i + 1);
+
   return (
     <div className="bg-secondary sm:flex-row flex flex-col justify-center gap-x-4 items-center py-4">
       <h3 className="text-lg font-medium mb-4 sm:mb-0 text-dark">
@@ -28,6 +30,7 @@ export default function InputField() {
           countValue={countValue}
           setCountValue={setCountValue}
           size={"lg"}
+          optionValue={countOption}
         />
         <input
           type="text"

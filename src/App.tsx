@@ -1,15 +1,17 @@
 import "./App.css";
-import Header from "./components/Header";
-import InputField from "./components/InputField";
-import ItemList from "./components/ItemList";
-import Footer from "./components/Footer";
+import Header from "./components/Logo";
+import Form from "./components/Form";
+import PackingList from "./components/PackingList";
+// import FilterField from "./components/FilterField";
+import Footer from "./components/Stats";
 
 function App() {
   return (
-    <div>
+    <div className="h-screen w-full grid grid-rows-[auto_auto_1fr_auto]">
       <Header />
-      <InputField />
-      <ItemList />
+      <Form />
+      <PackingList />
+      {/* <FilterField /> */}
       <Footer />
     </div>
   );

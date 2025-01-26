@@ -32,33 +32,25 @@ export default function ListProvider({ children }: ListProviderType) {
 
   function addItem(item: string) {
     const newItem = createListObj(item, countValue);
-    // setItems([...items, newItem]);
     setItems((items) => [...items, newItem]);
   }
 
   function deleteItem(id: string) {
-    // const filteredItems = items.filter((item) => item.id !== id);
-    // setItems([...filteredItems]);
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
   function toggleCheckbox(id: string) {
-    const copyItems = [...items];
-    const selectedItem = copyItems.find((item) => item.id === id);
-    if (selectedItem) {
-      selectedItem.completed = !selectedItem.completed;
-      setItems([...copyItems]);
-    }
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, completed: !item.completed } : item
+      )
+    );
   }
 
   function updateItem(id: string, item: string, qty: number) {
-    const copyItems = [...items];
-    const selectedItem = copyItems.find((item) => item.id === id);
-    if (selectedItem) {
-      selectedItem.item = item;
-      selectedItem.qty = qty;
-      setItems([...copyItems]);
-    }
+    setItems((items) =>
+      items.map((el) => (el.id === id ? { ...el, item, qty } : el))
+    );
   }
 
   return (

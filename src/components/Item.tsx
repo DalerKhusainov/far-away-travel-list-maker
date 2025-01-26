@@ -15,7 +15,7 @@ export default function Item({ item }: ItemProps) {
   const { deleteItem, toggleCheckbox, updateItem } = listContext;
 
   return (
-    <>
+    <li className="text-light">
       {isOpen && (
         <ItemCard
           itemObj={item}
@@ -31,7 +31,7 @@ export default function Item({ item }: ItemProps) {
           updateItem={updateItem}
         />
       )}
-    </>
+    </li>
   );
 }
 
@@ -39,7 +39,6 @@ interface ItemUpdateProps {
   itemObj: ListType;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   updateItem: (id: string, item: string, qty: number) => void;
-  // setCountValue: Dispatch<SetStateAction<number>>;
 }
 
 function ItemUpdate({ itemObj, setIsOpen, updateItem }: ItemUpdateProps) {
@@ -52,13 +51,16 @@ function ItemUpdate({ itemObj, setIsOpen, updateItem }: ItemUpdateProps) {
     setIsOpen((prev) => !prev);
   }
 
+  const countOption = Array.from({ length: 20 }, (_, i) => i + 1);
+
   return (
-    <div className="flex justify-between items-center gap-2 mb-4 bg-primary/30 py-2 px-4 rounded-md shadow-lg h-[50px]">
+    <div className="flex justify-between items-center gap-2 bg-primary/30 py-2 px-4 rounded-md shadow-lg">
       <div className="flex items-center justify-center text-lg space-x-4">
         <Selector
           countValue={updatedCountValue}
           setCountValue={setUpdatedCountValue}
           size={"md"}
+          optionValue={countOption}
         />
         <input
           type="text"
@@ -98,6 +100,7 @@ function ItemCard({
           type="checkbox"
           defaultChecked={completed}
           onClick={() => toggleCheckbox(id)}
+          className="h-4 w-4 accent-secondary"
         />
         <div className={`text-lg space-x-2 ${completed ? "line-through" : ""}`}>
           <span>
