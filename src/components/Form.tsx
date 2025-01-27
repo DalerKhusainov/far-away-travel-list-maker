@@ -27,8 +27,8 @@ export default function Form() {
       </h3>
       <form className="flex gap-2" onSubmit={handleSubmit}>
         <Selector
-          countValue={countValue}
-          setCountValue={setCountValue}
+          selectValue={countValue}
+          setValue={setCountValue}
           size={"lg"}
           optionValue={countOption}
         />
@@ -40,7 +40,6 @@ export default function Form() {
           className="bg-inputColor py-1 pl-6 rounded-2xl focus:outline-none focus:border-accent focus:ring focus:ring-accent placeholder:text-accent"
         />
         <button
-          type="button"
           disabled={!inputValue}
           className="bg-tertiary py-1 px-4 rounded-2xl uppercase font-medium text-dark disabled:bg-tertiary/70"
         >

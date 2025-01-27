@@ -10,12 +10,16 @@ import { createListObj } from "../utils/helpers";
 
 interface ListContextType {
   items: ListsType;
-  countValue: number;
-  setCountValue: Dispatch<SetStateAction<number>>;
+  countValue: number | string;
+  setCountValue: Dispatch<SetStateAction<number | string>>;
+  sortBy: string | number;
+  setSortBy: Dispatch<SetStateAction<number | string>>;
+  sortedItems: ListsType | undefined;
   addItem: (item: string) => void;
   deleteItem: (id: string) => void;
   toggleCheckbox: (id: string) => void;
   updateItem: (id: string, item: string, qty: number) => void;
+  clearAllItems: () => void;
 }
 
 export const ListContext = createContext<ListContextType | undefined>(
@@ -28,10 +32,38 @@ interface ListProviderType {
 
 export default function ListProvider({ children }: ListProviderType) {
   const [items, setItems] = useState<ListsType>([]);
-  const [countValue, setCountValue] = useState<number>(1);
+  const [countValue, setCountValue] = useState<number | string>(1);
+  const [sortBy, setSortBy] = useState<string | number>("sort by input order");
+
+  let sortedItems;
+
+  const sortedByInput = items;
+
+  const sortedByDescription = items
+    .slice()
+    .sort((a, b) => a.item.localeCompare(b.item));
+
+  const sortedByPacked = items
+    .slice()
+    .sort((a, b) => Number(a.completed) - Number(b.completed));
+
+  if (sortBy === "sort by input order") {
+    sortedItems = sortedByInput;
+  }
+
+  if (sortBy === "sort by description") {
+    sortedItems = sortedByDescription;
+  }
+
+  if (sortBy === "sort by packed status") {
+    sortedItems = sortedByPacked;
+  }
 
   function addItem(item: string) {
-    const newItem = createListObj(item, countValue);
+    // OR
+    // const newItem = { item, qty: countValue, completed: false, id: nanoid() }
+    ////////////////////////////////////////
+    const newItem = createListObj(item, Number(countValue));
     setItems((items) => [...items, newItem]);
   }
 
@@ -53,6 +85,10 @@ export default function ListProvider({ children }: ListProviderType) {
     );
   }
 
+  function clearAllItems() {
+    setItems([]);
+  }
+
   return (
     <ListContext.Provider
       value={{
@@ -63,6 +99,10 @@ export default function ListProvider({ children }: ListProviderType) {
         toggleCheckbox,
         setCountValue,
         updateItem,
+        setSortBy,
+        sortBy,
+        sortedItems,
+        clearAllItems,
       }}
     >
       {children}

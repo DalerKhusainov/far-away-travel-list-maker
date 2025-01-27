@@ -1,20 +1,20 @@
 import { Dispatch, SetStateAction, ChangeEvent } from "react";
 
 interface SelectorProps {
-  countValue: number;
-  setCountValue: Dispatch<SetStateAction<number>>;
+  selectValue: number | string;
+  setValue: Dispatch<SetStateAction<number | string>>;
   size: "md" | "lg";
   optionValue: number[] | string[];
 }
 
 export default function Selector({
-  countValue,
-  setCountValue,
+  selectValue,
+  setValue,
   size,
   optionValue,
 }: SelectorProps) {
   function onSelectHandler(e: ChangeEvent<HTMLSelectElement>) {
-    setCountValue(Number(e.target.value));
+    setValue(e.target.value);
   }
 
   return (
@@ -22,9 +22,9 @@ export default function Selector({
       <select
         name=""
         id=""
-        value={countValue}
+        value={selectValue}
         onChange={onSelectHandler}
-        className={`bg-inputColor text-dark rounded-2xl h-full px-${
+        className={`bg-inputColor uppercase text-dark font-semibold rounded-2xl h-full px-${
           size === "md" ? "2" : "4"
         }`}
       >
@@ -33,11 +33,6 @@ export default function Selector({
             {el}
           </option>
         ))}
-        {/* {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-          <option value={num} key={num}>
-            {num}
-          </option>
-        ))} */}
       </select>
     </div>
   );

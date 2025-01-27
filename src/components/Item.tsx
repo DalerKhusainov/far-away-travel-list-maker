@@ -14,6 +14,8 @@ export default function Item({ item }: ItemProps) {
   if (!listContext) return;
   const { deleteItem, toggleCheckbox, updateItem } = listContext;
 
+  console.log(item.item);
+
   return (
     <li className="text-light">
       {isOpen && (
@@ -44,10 +46,12 @@ interface ItemUpdateProps {
 function ItemUpdate({ itemObj, setIsOpen, updateItem }: ItemUpdateProps) {
   const { id, qty, item } = itemObj;
   const [updatedItem, setUpdatedItem] = useState<string>(item);
-  const [updatedCountValue, setUpdatedCountValue] = useState<number>(qty);
+  const [updatedCountValue, setUpdatedCountValue] = useState<number | string>(
+    qty
+  );
 
   function onSaveHandler() {
-    updateItem(id, updatedItem, updatedCountValue);
+    updateItem(id, updatedItem, Number(updatedCountValue));
     setIsOpen((prev) => !prev);
   }
 
@@ -57,8 +61,8 @@ function ItemUpdate({ itemObj, setIsOpen, updateItem }: ItemUpdateProps) {
     <div className="flex justify-between items-center gap-2 bg-primary/30 py-2 px-4 rounded-md shadow-lg">
       <div className="flex items-center justify-center text-lg space-x-4">
         <Selector
-          countValue={updatedCountValue}
-          setCountValue={setUpdatedCountValue}
+          selectValue={updatedCountValue}
+          setValue={setUpdatedCountValue}
           size={"md"}
           optionValue={countOption}
         />
