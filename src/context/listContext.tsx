@@ -26,7 +26,7 @@ export const ListContext = createContext<ListContextType | undefined>(
   undefined
 );
 
-const TravelListKey = "MY_TRAVEL_LIST";
+// const TravelListKey = "MY_TRAVEL_LIST";
 
 interface ListProviderType {
   children: ReactNode;
@@ -38,11 +38,11 @@ export default function ListProvider({ children }: ListProviderType) {
   const [sortBy, setSortBy] = useState<string | number>("sort by input order");
 
   function setToLocaleStorage(items: ListsType) {
-    localStorage.setItem(TravelListKey, JSON.stringify(items));
+    localStorage.setItem("MY_TRAVEL_LIST", JSON.stringify(items));
   }
 
   function getFromLocaleStorage() {
-    const items = localStorage.getItem(TravelListKey);
+    const items = localStorage.getItem("MY_TRAVEL_LIST");
     if (items === null) return null;
 
     try {
