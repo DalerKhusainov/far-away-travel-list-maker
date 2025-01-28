@@ -26,31 +26,31 @@ export const ListContext = createContext<ListContextType | undefined>(
   undefined
 );
 
-// const ItemListKey =  "MY_TRAVEL_LIST"
+const TravelListKey = "MY_TRAVEL_LIST";
 
 interface ListProviderType {
   children: ReactNode;
 }
 
 export default function ListProvider({ children }: ListProviderType) {
-  const [items, setItems] = useState<ListsType>([]);
+  const [items, setItems] = useState<ListsType>(getFromLocaleStorage());
   const [countValue, setCountValue] = useState<number | string>(1);
   const [sortBy, setSortBy] = useState<string | number>("sort by input order");
 
-  // function setToLocaleStorage(items: ListsType) {
-  //   localStorage.setItem(ItemListKey, JSON.stringify(items))
-  // }
+  function setToLocaleStorage(items: ListsType) {
+    localStorage.setItem(TravelListKey, JSON.stringify(items));
+  }
 
-  // function getFromLocaleStorage() {
-  //   const items = localStorage.getItem(ItemListKey)
-  //   if (items === null) return null
+  function getFromLocaleStorage() {
+    const items = localStorage.getItem(TravelListKey);
+    if (items === null) return null;
 
-  //   try {
-  //     return JSON.parse(items)
-  //   } catch (error) {
-  //     return items
-  //   }
-  // }
+    try {
+      return JSON.parse(items);
+    } catch (error) {
+      return items;
+    }
+  }
 
   let sortedItems;
 
@@ -81,29 +81,52 @@ export default function ListProvider({ children }: ListProviderType) {
     // const newItem = { item, qty: countValue, completed: false, id: nanoid() }
     ////////////////////////////////////////
     const newItem = createListObj(item, Number(countValue));
-    setItems((items) => [...items, newItem]);
+    setToLocaleStorage([...items, newItem]);
+    setItems(getFromLocaleStorage());
+
+    // setItems((items) => [...items, newItem]);
   }
 
   function deleteItem(id: string) {
-    setItems((items) => items.filter((item) => item.id !== id));
+    const filteredItems = items.filter((item) => item.id !== id);
+    setToLocaleStorage([...filteredItems]);
+    setItems(getFromLocaleStorage());
+
+    // setItems((items) => items.filter((item) => item.id !== id));
   }
 
   function toggleCheckbox(id: string) {
-    setItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, completed: !item.completed } : item
-      )
-    );
+    const copyItems = [...items];
+    const selectedItem = copyItems.find((item) => item.id === id);
+    if (!selectedItem) return;
+    selectedItem.completed = !selectedItem.completed;
+    setToLocaleStorage([...copyItems]);
+    setItems(getFromLocaleStorage());
+
+    // setItems((items) =>
+    //   items.map((item) =>
+    //     item.id === id ? { ...item, completed: !item.completed } : item
+    //   )
+    // );
   }
 
   function updateItem(id: string, item: string, qty: number) {
-    setItems((items) =>
-      items.map((el) => (el.id === id ? { ...el, item, qty } : el))
-    );
+    const copyItems = [...items];
+    const selectedItem = copyItems.find((item) => item.id === id);
+    if (!selectedItem) return;
+    selectedItem.item = item;
+    selectedItem.qty = qty;
+    setToLocaleStorage([...copyItems]);
+    setItems(getFromLocaleStorage());
+
+    // setItems((items) =>
+    //   items.map((el) => (el.id === id ? { ...el, item, qty } : el))
+    // );
   }
 
   function clearAllItems() {
-    setItems([]);
+    setToLocaleStorage([]);
+    setItems(getFromLocaleStorage());
   }
 
   return (
