@@ -6,10 +6,12 @@ export default function Footer() {
   if (!listContext) return;
   const { items } = listContext;
 
-  if (!items) {
+  if (items.length === 0) {
     return (
-      <p>
-        <em>Start adding some items to your packing list 🚀</em>
+      <p className="flex items-center justify-center text-xl bg-tertiary h-[60px] fixed bottom-0 left-0 w-full">
+        <em className="text-light">
+          Start adding some items to your packing list 🚀
+        </em>
       </p>
     );
   }
